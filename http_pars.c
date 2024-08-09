@@ -34,29 +34,20 @@ int parse_request(const char *request, struct HttpRequest *Req) {
     }
     memset(temp_ptr, 0, sizeof(struct HttpRequest));
 
-    char *req_copy = malloc(strlen(request) + 1);
+    char *req_copy = (char *)malloc(strlen(request) + 1);
     if (req_copy == NULL) {
         fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
         return 1;
     }
-    if (strcpy(req_copy, request) < 0) {
+    if (strcpy(req_copy, request) == NULL) {
         fprintf(stderr, "Copy error", __FILE__, __LINE__);
         return 1;
     }
-    for (int i = 0; i < strlen(req_copy); i++) {
-        printf("%c", req_copy[i]);
-    }
-
-    printf("Request: %s\n", req_copy);
 
     if (req_copy == NULL || req_copy[0] == '\0' || req_copy[0] == '\n' || req_copy[0] == '\r' || req_copy[0] == ' ' || req_copy[0] == '\t' || (strstr(req_copy, "\r\n") == NULL)) {
         fprintf(stderr, "Request is empty", __FILE__, __LINE__);
         return 1;
     }
-    
-    printf("Request: %s\n", req_copy);
-
-
 
     char* saveptr;
   

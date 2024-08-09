@@ -21,7 +21,7 @@ struct HttpRequest {
 };
 
 // Функция для парсинга запроса
-struct HttpRequest parse_request(const char *request, struct HttpRequest *Req);
+int parse_request(const char *request, struct HttpRequest *Req);
 
 // Функция для освобождения памяти, выделенной под запрос
 void free_request(struct HttpRequest *Req);

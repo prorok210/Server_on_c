@@ -5,16 +5,11 @@
 
 // Примеры запросов для тестирования
 const char* test_req[] = {
-    "GET /index.html HTTP/1.1\r\n"
-    "Host: www.example.com\r\n"
-    "User-Agent: TestAgent\r\n"
-    "Content-Length: 13\r\n"
-    "\r\n"
-    "Hello, World!\r\n",
+    "GET /index.html HTTP/1.1\r\nHost: www.example.com\r\nUser-Agent: TestAgent\r\nContent-Length: 13\r\n\r\nHello, World!\r\n",
 
     "GET /index.html HTTP/1.1\r\n",
 
-    " "
+    ""
 };
 
 
