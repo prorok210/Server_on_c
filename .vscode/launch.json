@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++: gdb Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.exe", // Замените на имя вашего исполняемого файла
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "build",
+      "miDebuggerPath": "C:/cygwin64/bin/gdb.exe", // Путь к gdb, может варьироваться в зависимости от системы
+      "logging": {
+        "engineLogging": true,
+        "trace": true,
+        "traceResponse": true
+      }
+    }
+  ]
+}

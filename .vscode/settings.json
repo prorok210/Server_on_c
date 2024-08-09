@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "*.c": "c",
+    "stdio.h": "c",
+    "setjmp.h": "c",
+    "string.h": "c",
+    "inet.h": "c",
+    "pthread.h": "c"
+  }
+}
