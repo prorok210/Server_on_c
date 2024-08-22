@@ -31,9 +31,9 @@ int main() {
 
     printf("Connected to server at %s:%d\n", SERVER_IP, PORT);
 
-    char buffer[BUF_SIZE] = "Hello, server!";
+    char buffer[BUF_SIZE] = "GET /index.html HTTP/1.1\r\nHost: www.example.com\r\nUser-Agent: TestAgent\r\nContent-Length: 13\r\n\r\nHello, World!\r\n";
     if (send(sock, buffer, strlen(buffer), 0) < 0) {
-        fprintf("Send error");
+        fprintf(stderr, "Send error");
         close(sock);
         return 1;
     }

@@ -6,7 +6,6 @@
 
 #define HEADERS_COUNT 20
 
-//Парсес запроса
 struct Headers {
     char *name;
     char *value;
@@ -20,32 +19,39 @@ struct HttpRequest {
     char *body;
 };
 
+void free_request(struct HttpRequest *Req);
+
 
 int parse_request(const char *request, struct HttpRequest *Req) {
     if (Req == NULL) {
-        fprintf(stderr, "Invalid pointer to struct", __FILE__, __LINE__);
+        fprintf(stderr, "Invalid pointer to struct\n", __FILE__, __LINE__);
         return 1;
     }
 
     struct HttpRequest *temp_ptr = malloc(sizeof(struct HttpRequest));
     if (temp_ptr == NULL) {
-        fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
+        fprintf(stderr, "Memory allocation error\n", __FILE__, __LINE__);
         return 1;
     }
     memset(temp_ptr, 0, sizeof(struct HttpRequest));
 
     char *req_copy = (char *)malloc(strlen(request) + 1);
     if (req_copy == NULL) {
-        fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
+        fprintf(stderr, "Memory allocation error\n", __FILE__, __LINE__);
+        free(temp_ptr);
         return 1;
     }
-    if (strcpy(req_copy, request) == NULL) {
-        fprintf(stderr, "Copy error", __FILE__, __LINE__);
+    if (strcpy(req_copy, request) < 0) {
+        fprintf(stderr, "Copy error\n", __FILE__, __LINE__);
+        free(temp_ptr);
+        free(req_copy);
         return 1;
     }
 
     if (req_copy == NULL || req_copy[0] == '\0' || req_copy[0] == '\n' || req_copy[0] == '\r' || req_copy[0] == ' ' || req_copy[0] == '\t' || (strstr(req_copy, "\r\n") == NULL)) {
-        fprintf(stderr, "Request is empty", __FILE__, __LINE__);
+        fprintf(stderr, "Request is empty\n", __FILE__, __LINE__);
+        free(req_copy);
+        free(temp_ptr);
         return 1;
     }
 
@@ -53,18 +59,20 @@ int parse_request(const char *request, struct HttpRequest *Req) {
   
     char* line = strtok_r(req_copy, "\r\n", &saveptr);
     if (line == NULL){
-        fprintf(stderr, "Request is empty", __FILE__, __LINE__);
+        fprintf(stderr, "Request is empty\n", __FILE__, __LINE__);
         free(req_copy);
+        free(temp_ptr);
         return 1;
     }
-        
-
+    
+    // основная информация из запроса
     char *method = strtok(line, " ");
     if (method) {
         temp_ptr->method = strdup(method);
         if (temp_ptr->method == NULL) {
-            fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
+            fprintf(stderr, "Memory allocation error\n", __FILE__, __LINE__);
             free(req_copy);
+            free (temp_ptr);
             return 1;
         }
     }
@@ -73,8 +81,10 @@ int parse_request(const char *request, struct HttpRequest *Req) {
     if (url) {
         temp_ptr->url = strdup(url);
         if (temp_ptr->url == NULL) {
-            fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
+            fprintf(stderr, "Memory allocation error\n", __FILE__, __LINE__);
             free(req_copy);
+            free(temp_ptr->method);
+            free(temp_ptr);
             return 1;
         }
     }
@@ -83,21 +93,36 @@ int parse_request(const char *request, struct HttpRequest *Req) {
     if (version) {
         temp_ptr->version = strdup(version);
         if (temp_ptr->version == NULL) {
-            fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
+            fprintf(stderr, "Memory allocation error\n", __FILE__, __LINE__);
+            free(temp_ptr->method);
+            free(temp_ptr->url);
+            free(temp_ptr);
             free(req_copy);
             return 1;
         }
     }
+    if (temp_ptr->method == NULL || temp_ptr->url == NULL || temp_ptr->version == NULL) {
+        fprintf(stderr, "Invalid request\n", __FILE__, __LINE__);
+        free_request(temp_ptr);
+        free(req_copy);
+        return 1;
+    }
 
+
+    // заголовки запроса
     int header_count = 0;
+    char* end_of_headers = NULL;
+    if (strstr(saveptr, "\r\n\r\n") != NULL) 
+        end_of_headers = (strstr(saveptr, "\r\n\r\n") + 4);
 
-    while ((line = strtok_r(saveptr, "\r\n", &saveptr)) != NULL) {
-        if (saveptr[0] == '\n' && saveptr[1] == '\r') {
+    while ((line = strtok_r(saveptr, "\r\n", &saveptr))!= end_of_headers) {
+        if (line[0] == '\0')
             break;
-        }
+
         if (header_count >= HEADERS_COUNT) {
-            fprintf(stderr, "Too many headers", __FILE__, __LINE__);
+            fprintf(stderr, "Too many headers\n", __FILE__, __LINE__);
             free(req_copy);
+            free_request(temp_ptr);
             return 1;
         }
 
@@ -105,8 +130,9 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         if (name){
             temp_ptr->headers[header_count].name = strdup(name);
             if (temp_ptr->headers[header_count].name == NULL) {
-                fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
+                fprintf(stderr, "Memory allocation error\n", __FILE__, __LINE__);
                 free(req_copy);
+                free_request(temp_ptr);
                 return 1;
             }
         }
@@ -118,34 +144,34 @@ int parse_request(const char *request, struct HttpRequest *Req) {
             }
             temp_ptr->headers[header_count].value = strdup(header_value);
             if (temp_ptr->headers[header_count].value == NULL) {
-                fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
+                fprintf(stderr, "Memory allocation error\n", __FILE__, __LINE__);
                 free(req_copy);
+                free_request(temp_ptr);
                 return 1;
             }
         }
 
-        header_count++;    
+        header_count++;
     }
 
-    char *body = strtok(NULL, "\r\n");
+
+    //тело запроса
+    char *body = strtok(end_of_headers, "\r\n");
     if (body) {
         temp_ptr->body = strdup(body);
         if (temp_ptr->body == NULL) {
-            fprintf(stderr, "Memory allocation error", __FILE__, __LINE__);
+            fprintf(stderr, "Memory allocation error\n", __FILE__, __LINE__);
             free(req_copy);
+            free_request(temp_ptr);
             return 1;
         }
     }
-    Req = temp_ptr;
-    
-    free(temp_ptr);
+
+    *Req = *temp_ptr;
+
     free(req_copy);
     return 0;
 }
-
-
-
-
 
 
 void free_request(struct HttpRequest *Req) {
