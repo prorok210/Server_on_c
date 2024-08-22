@@ -27,7 +27,6 @@ int parser_test() {
     memset(&case3, 0, sizeof(case3));
 
     printf("Case 1\n");
-    printf("Request: %s\n", test_req[0]);
     parse_request(test_req[0], &case1);
     {
         if (
@@ -50,9 +49,10 @@ int parser_test() {
         free_request(&case1);
     }
 
-    // Тест 2
+
+
     printf("Case 2\n");
-// Инициализация структуры
+
     parse_request(test_req[1], &case2);
     {
         if (
@@ -71,8 +71,8 @@ int parser_test() {
         free_request(&case2);
     }
 
-    // Тест 3
     printf("Case 3\n");
+
     parse_request(test_req[2], &case3);
     {
         if (
@@ -98,7 +98,6 @@ int parser_test() {
     }
 }
 
-// Основная функция
 int main() {
     if (parser_test() == 0) {
         printf("All tests passed\n");
