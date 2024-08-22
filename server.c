@@ -7,11 +7,14 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "http_pars.h"
 #include "processing_req.h"
+#include "handle_app.h"
+
 
 #define PORT 8080
-#define BUF_SIZE 1024
+#define BUF_SIZE 16384
 #define BACKLOG 10
 
 // int socket(int domain, int type, int protocol); //(AF_INET, AF_INET6) Возвращает дискриптор сокета
@@ -21,9 +24,6 @@
 // int read(); int recv(); int recvfrom(); int recvmsg();
 // int write(); int send(); int sendto(); int sendmsg();
 // int close();shutdown(); 
-
-
-char buffer[BUF_SIZE] = {0};
 
 struct Args {
     int client_sock;
@@ -77,7 +77,7 @@ int start_server() {
 
         struct Args *arg = malloc(sizeof(struct Args));
         arg->client_sock = client;
-        arg->buffer = buffer;
+        arg->buffer = malloc(BUF_SIZE);
         arg->buf_size = BUF_SIZE;
         arg->rec_request = malloc(sizeof(struct HttpRequest));
         if (arg->rec_request == NULL) {
@@ -85,36 +85,16 @@ int start_server() {
             continue;
         }
 
-        int bytes_read = receive_msg(client, buffer, BUF_SIZE, arg->rec_request);
-        if (bytes_read < 0) {
-            fprintf(stderr, "Error receiving message");
+        pthread_t thread_id;
+        if (pthread_create(&thread_id, NULL, app, (void *)arg) != 0) {
+            fprintf(stderr, "Thread creation error\n");
+            close(client);
+            free(arg->rec_request);
+            free(arg);
             continue;
         }
 
-        if (process_request(arg->rec_request, response) != 0) {
-            fprintf(stderr, "Error processing request");
-            continue;
-        }
-        char *cnt_len_str = malloc(sizeof(char) * 10);
-        sprintf(cnt_len_str, "%d", response->content_length);
-
-        response_str = strcat(response_str, response->status);
-        response_str = strcat(response_str, "\r\n");
-        response_str = strcat(response_str, "Content-Type: ");
-        response_str = strcat(response_str, response->content_type);
-        response_str = strcat(response_str, "\r\n");
-        response_str = strcat(response_str, "Content-Length: ");
-        response_str = strcat(response_str, cnt_len_str);
-        response_str = strcat(response_str, "\r\n\r\n");
-        response_str = strcat(response_str, response->content);
-        response_str = strcat(response_str, "\r\n");
-
-        if (send(client, response_str, strlen(response_str), 0) < 0) {
-            fprintf(stderr, "Error sending response");
-            continue;
-        }
-
-        close(client);
+        pthread_detach(thread_id);
     }
 
     close(sock);

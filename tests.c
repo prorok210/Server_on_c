@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "http_pars.h"
+#include "register_views.h"
+
 
 // Примеры запросов для тестирования
 const char* test_req[] = {
@@ -9,32 +11,14 @@ const char* test_req[] = {
 
     "GET /index.html HTTP/1.1\r\n",
 
-    "",
-
-    "GET / HTTP/1.1\r\n"
-    "Host: 127.0.0.1:8080\r\n"
-    "Connection: keep-alive\r\n"
-    "sec-ch-ua: 'Not)A;Brand';v='99', 'Google Chrome';v='127', 'Chromium';v='127' \r\n"
-    "sec-ch-ua-mobile: ?0 \r\n"
-    "sec-ch-ua-platform: 'Windows' \r\n"
-    "Upgrade-Insecure-Requests: 1 \r\n"
-    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 \r\n"
-    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7 \r\n"
-    "Sec-Fetch-Site: none\r\n"
-    "Sec-Fetch-Mode: navigate\r\n"
-    "Sec-Fetch-User: ?1\r\n"
-    "Sec-Fetch-Dest: document\r\n"
-    "Accept-Encoding: gzip, deflate, br, zstd\r\n"
-    "Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7\r\n"
-    "Cookie: csrftoken=PbVuRQkvxXtyoyBLSkuCMhrpJI4c34WY"
+    ""
 };
-
 
 
 // Функция для тестирования парсера
 int parser_test() {
     int success_case1 = 1, success_case2 = 1, success_case3 = 1;
-    printf("Starting tests\n");
+    printf("Starting parser tests\n");
 
     struct HttpRequest *case1 = malloc(sizeof(struct HttpRequest));
     struct HttpRequest *case2 = malloc(sizeof(struct HttpRequest));
@@ -93,20 +77,53 @@ int parser_test() {
         }
         free_request(case3);
 
-    printf("Case 4\n");
-    struct HttpRequest *case4 = malloc(sizeof(struct HttpRequest));
-    parse_request(test_req[3], case4);
-    printf("%s\n", case4->method);
-    printf("%s\n", case4->url);
-    printf("%s\n", case4->version);
-    printf("%s\n", case4->headers[0].name);
-    printf("%s\n", case4->headers[0].value);
-    printf("%s\n", case4->headers[1].name);
-    printf("%s\n", case4->headers[1].value);
-    printf("%s\n", case4->headers[2].name);
-    printf("%s\n", case4->headers[2].value);
-    printf("%s\n", case4->headers[10].name);
-    printf("%s\n", case4->headers[10].value);
+    if (success_case1 && success_case2 && success_case3) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+// функция для тестирования регистрации функций обработки запросов
+struct HttpResponse test_view_func(struct HttpRequest *request) {
+        struct HttpResponse response;
+        response.status_code = 200;
+        response.status= "OK";
+        response.content_type = "text/plain";
+        response.content = "Test successful!";
+        response.content_length = strlen(response.content);
+        return response;
+    }
+
+
+int register_test() {
+    printf("Starting register views tests\n");
+    int success_case1 = 1, success_case2 = 1, success_case3 = 1;
+    if (register_view("/test/1", test_view_func) == 0) {
+        printf("Case 1 passed\n");
+    } else {
+        success_case1 = 0;
+        printf("Case 1 failed\n");
+    }
+    if (register_view("/test/2", test_view_func) == 0) {
+        printf("Case 2 passed\n");
+    } else {
+        success_case2 = 0;
+        printf("Case 2 failed\n");
+    }
+    if (register_view("/test/3", test_view_func) == 0) {
+        printf("Case 3 passed\n");
+    } else {
+        success_case3 = 0;
+        printf("Case 3 failed\n");
+    }
+    
+    printf("%s\n", header_view->route);
+    printf("%s\n", header_view->next->route);
+    printf("%s\n", header_view->next->next->route);
 
     if (success_case1 && success_case2 && success_case3) {
         return 0;
@@ -115,11 +132,24 @@ int parser_test() {
     }
 }
 
+
+
+
+
+
+
+
 int main() {
     if (parser_test() == 0) {
-        printf("All tests passed\n");
+        printf("All parser tests passed\n");
     } else {
-        printf("Some tests failed\n");
+        printf("Some parser tests failed\n");
+    }
+
+    if (register_test() == 0) {
+        printf("All register views tests passed\n");
+    } else {
+        printf("Some register views tests failed\n");
     }
     return 0;
 }

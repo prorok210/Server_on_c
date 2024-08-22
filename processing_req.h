@@ -4,14 +4,26 @@
 #include <sys/types.h>
 
 struct HttpResponse  {
+    int status_code;
     char *status;
     char *content_type;
     char *content;
     int content_length;
 };
 
-int receive_msg(int client_sock, char* buffer, int buf_size, struct HttpRequest *request);
+struct Headers {
+    char *name;
+    char *value;
+};
 
-int process_request(struct HttpRequest *request, struct HttpResponse *response);
+struct HttpRequest {
+    char *method;
+    char *url;
+    char *version;
+    struct Headers headers[20];
+    char *body;
+};
+
+int receive_msg(int client_sock, char* buffer, int buf_size, struct HttpRequest *request);
 
 #endif // PROCESSING_REQ_H

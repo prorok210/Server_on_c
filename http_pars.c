@@ -3,21 +3,10 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "processing_req.h"
 
 #define HEADERS_COUNT 20
 
-struct Headers {
-    char *name;
-    char *value;
-};
-
-struct HttpRequest {
-    char *method;
-    char *url;
-    char *version;
-    struct Headers headers[HEADERS_COUNT];
-    char *body;
-};
 
 void free_request(struct HttpRequest *Req);
 
