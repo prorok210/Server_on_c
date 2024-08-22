@@ -15,4 +15,6 @@ extern struct Views *header_view;
 
 int register_view(char *route, struct HttpResponse (*view)(struct HttpRequest *request));
 
+int paths();
+
 #endif//REGISTER_VIEWS_H

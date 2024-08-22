@@ -2,27 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 #include "http_pars.h"
-
-struct HttpResponse  {
-    int status_code;
-    char *status;
-    char *content_type;
-    char *content;
-    int content_length;
-};
-
-struct Headers {
-    char *name;
-    char *value;
-};
-
-struct HttpRequest {
-    char *method;
-    char *url;
-    char *version;
-    struct Headers headers[HEADERS_COUNT];
-    char *body;
-};
+#include "register_views.h"
+#include "processing_req.h"
 
 
 int receive_msg(int client_sock, char* buffer, int buf_size, struct HttpRequest *request) {
@@ -44,5 +25,16 @@ int receive_msg(int client_sock, char* buffer, int buf_size, struct HttpRequest 
     }
 
     return bytes_read;
+}
+
+struct HttpResponse (*router(char* route))(struct HttpRequest *) {
+    struct Views *current = header_view;
+    while (current != NULL) {
+        if (strcmp(current->route, route) == 0) {
+            return current->view;
+        }
+        current = current->next;
+    }
+    return NULL;
 }
     

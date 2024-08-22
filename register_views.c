@@ -42,3 +42,15 @@ int register_view(char *route, struct HttpResponse (*view)(struct HttpRequest *r
 
     return 0;
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "views.h"
+
+
+//функция для регистрации роутов. Они будут включены в основную программу
+
+int paths() {
+    if (register_view("/test", test_func)!=0) {
+        return -1;
+    }
+    return 0;
+}

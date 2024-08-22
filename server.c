@@ -11,6 +11,7 @@
 #include "http_pars.h"
 #include "processing_req.h"
 #include "handle_app.h"
+#include "register_views.h"
 
 
 #define PORT 8080
@@ -59,13 +60,16 @@ int start_server() {
             return 1;
         }
 
+    if (paths()!=0){
+        fprintf(stderr, "Loading views error");
+        return 1;
+    }
+
     printf("Listening on port %d .....\n", PORT);
 
     while (1) {
         struct sockaddr_in client_addr;
         socklen_t client_addrlen = sizeof(client_addr);
-        struct HttpResponse *response = malloc(sizeof(struct HttpResponse));
-        char *response_str = malloc(BUF_SIZE);
 
         int client = accept(sock, (struct sockaddr *)&client_addr, &client_addrlen);
         if (client < 0) {

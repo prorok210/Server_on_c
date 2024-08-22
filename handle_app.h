@@ -1,6 +1,8 @@
 #ifndef HANDLE_APP_H
 #define HANDLE_APP_H
 
-int app(int client_sock, char *buffer, int buf_size, struct HttpRequest *rec_request);
+#define RESPONSE_SIZE 16384
 
-#endif
+void* app(void* args);
+
+#endif  // HANDLE_APP_H
