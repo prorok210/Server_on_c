@@ -7,9 +7,6 @@
 #include "processing_req.h"
 
 
-void free_request(struct HttpRequest *Req);
-
-
 int parse_request(const char *request, struct HttpRequest *Req) {
     if (Req == NULL) {
         fprintf(stderr, "Invalid pointer to struct in file %s at line %d\n", __FILE__, __LINE__);
@@ -98,7 +95,6 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         return 1;
     }
 
-
     // заголовки запроса
     int header_count = 0;
     
@@ -149,7 +145,6 @@ int parse_request(const char *request, struct HttpRequest *Req) {
 
         header_count++;
     }
-
 
     //тело запроса
     char *body = strtok(end_of_headers, "\r\n");

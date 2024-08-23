@@ -34,29 +34,14 @@ void* app(void* args) {
         view_function = router(rec_request->url);
         if (view_function == NULL) {
             fprintf(stderr, "No route matched\n");
+            send(client_sock, "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n", 45, 0);
             goto cleanup;
         }
 
         struct HttpResponse response = view_function(rec_request);
 
-        char* response_line = (char*)malloc(RESPONSE_SIZE);
-        if (response_line == NULL) {
-            fprintf(stderr, "Memory allocation error\n");
-            goto cleanup;
-        }
-
-        int response_len = snprintf(response_line, RESPONSE_SIZE, "HTTP/1.1 %d %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n%s",
-                                       response.status_code, response.status, response.content_type, response.content_length, response.content);
-
-        if (response_len < 0 || response_len >= RESPONSE_SIZE) {
-            fprintf(stderr, "Error building response\n");
-            free(response_line);
-            goto cleanup;
-        }
-
-        if (send(client_sock, response_line, strlen(response_line), 0) < 0) {
-            fprintf(stderr, "Send error");
-            free(response_line);
+        if (send_msg(client_sock, &response) < 0) {
+            fprintf(stderr, "Error sending message\n");
             goto cleanup;
         }
 
@@ -76,8 +61,6 @@ void* app(void* args) {
             }
         }
 
-        free(response_line);
-
         memset(buffer, 0, buf_size);
         free_request(rec_request);
     }
@@ -88,6 +71,7 @@ void* app(void* args) {
         free(rec_request);
         free(buffer);
         free(arg);
+        printf("Thread finished, connection above\n");
         return NULL;
 }
 
