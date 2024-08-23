@@ -9,9 +9,17 @@
 const char* test_req[] = {
     "GET /index.html HTTP/1.1\r\nHost: www.example.com\r\nUser-Agent: TestAgent\r\nContent-Length: 13\r\n\r\nHello, World!\r\n",
 
-    "GET /index.html HTTP/1.1\r\n",
+    "GET /index.html HTTP/1.1\r\n\r\n",
 
-    ""
+    "",
+
+    "GET /test HTTP/1.1\r\nHost: 127.0.0.1:8080\r\nConnection: keep-alive\r\n"
+    "Cache-Control: max-age=0\r\nsec-ch-ua: 'Chromium';v='128', 'Not;A=Brand';v='24', 'Google Chrome';v='128'\r\n"
+    "sec-ch-ua-mobile: ?0\r\nsec-ch-ua-platform: 'Windows'\r\nUpgrade-Insecure-Requests: 1\r\n"
+    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36\r\n"
+    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
+    "Sec-Fetch-Site: cross-site\r\nSec-Fetch-Mode: navigate\r\nSec-Fetch-User: ?1\r\nSec-Fetch-Dest: document\r\n"
+    "Accept-Encoding: gzip, deflate, br, zstd\r\nAccept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7\r\nCookie: csrftoken=PbVuRQkvxXtyoyBLSkuCMhrpJI4c34WY\r\n\r\n"
 };
 
 
@@ -76,6 +84,22 @@ int parser_test() {
             printf("Case 3 failed\n");
         }
         free_request(case3);
+
+
+    printf("Case 4\n");
+
+    struct HttpRequest *case4 = malloc(sizeof(struct HttpRequest));
+    parse_request(test_req[3], case4);
+    printf("Method: %s\n", case4->method);
+    printf("URL: %s\n", case4->url);
+    printf("Version: %s\n", case4->version);
+    printf("Headers:\n");
+    for (int i = 0; i < HEADERS_COUNT; i++) {
+        if (case4->headers[i].name == NULL) {
+            break;
+        }
+        printf("%s: %s\n", case4->headers[i].name, case4->headers[i].value);
+    }
 
     if (success_case1 && success_case2 && success_case3) {
         return 0;

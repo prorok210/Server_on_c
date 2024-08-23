@@ -14,11 +14,13 @@ int receive_msg(int client_sock, char* buffer, int buf_size, struct HttpRequest 
         return 0;
     }
     if (bytes_read < 0) {
-        perror("Read error");
+        fprintf(stderr, "Error reading from socket\n");
         return -1;
     }
 
-    printf("Received: %s\n", buffer);
+    format_request(buffer);
+
+    // printf("Received: %s\n", buffer);
     if (parse_request(buffer, request)!=0) {
         fprintf(stderr, "Error parsing request\n");
         return -1;
@@ -26,6 +28,16 @@ int receive_msg(int client_sock, char* buffer, int buf_size, struct HttpRequest 
 
     return bytes_read;
 }
+
+
+void format_request(char* request) {
+    while(*request != '\0') {
+        if (*request == '"')
+            *request = '\'';
+        request++;
+    }
+}
+
 
 struct HttpResponse (*router(char* route))(struct HttpRequest *) {
     struct Views *current = header_view;
