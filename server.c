@@ -12,6 +12,7 @@
 #include "processing_req.h"
 #include "handle_app.h"
 #include "register_views.h"
+#include "server.h"
 
 
 #define PORT 8080
@@ -26,12 +27,6 @@
 // int write(); int send(); int sendto(); int sendmsg();
 // int close();shutdown(); 
 
-struct Args {
-    int client_sock;
-    char *buffer;
-    int buf_size;
-    struct HttpRequest *rec_request;
-};
 
 int start_server() {
     struct sockaddr_in server_sock_addr = {
@@ -65,6 +60,8 @@ int start_server() {
         return 1;
     }
 
+    printf("Server was successfully started\n");
+
     printf("Listening on port %d .....\n", PORT);
 
     while (1) {
@@ -80,13 +77,21 @@ int start_server() {
         printf("Client connected\n");
 
         struct Args *arg = malloc(sizeof(struct Args));
-        arg->client_sock = client;
-        arg->buffer = malloc(BUF_SIZE);
-        arg->buf_size = BUF_SIZE;
-        arg->rec_request = malloc(sizeof(struct HttpRequest));
+        if (arg == NULL){
+            fprintf(stderr, "Memory allocation error");
+            return -1;
+        }
+        arg->client_sock     = client;
+        arg->buffer          = malloc(BUF_SIZE);
+        arg->buf_size        = BUF_SIZE;
+        arg->keep_alive      = 1;      
+        arg->timeout_s       = TIMEOUT; 
+        arg->max_requests    = MAX_REQUESTS;
+        arg->num_of_requests = 0;
+        arg->rec_request     = malloc(sizeof(struct HttpRequest));
         if (arg->rec_request == NULL) {
             fprintf(stderr, "Memory allocation error");
-            continue;
+            return -1;
         }
 
         pthread_t thread_id;
@@ -94,6 +99,7 @@ int start_server() {
             fprintf(stderr, "Thread creation error\n");
             close(client);
             free(arg->rec_request);
+            free(arg->buffer);
             free(arg);
             continue;
         }

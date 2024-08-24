@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include "processing_req.h"
 
-#define HEADERS_COUNT 20
+#define HEADERS_COUNT 50
 
 // Функция для парсинга запроса
 int parse_request(const char *request, struct HttpRequest *Req);

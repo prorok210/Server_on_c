@@ -9,10 +9,14 @@
 
 // Структура для передачи аргументов в поток
 struct Args {
-    int client_sock;            // Дескриптор сокета клиента
-    char *buffer;               // Буфер для получения данных
-    int buf_size;               // Размер буфера
-    struct HttpRequest *rec_request;  // Структура для хранения распарсенного HTTP-запроса
+    int client_sock;
+    char *buffer;
+    int buf_size;
+    int keep_alive;
+    int timeout_s;
+    int max_requests;
+    int num_of_requests;
+    struct HttpRequest *rec_request;
 };
 
 // Функция запуска сервера

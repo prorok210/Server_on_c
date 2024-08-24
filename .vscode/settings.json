@@ -5,6 +5,7 @@
     "setjmp.h": "c",
     "string.h": "c",
     "inet.h": "c",
-    "pthread.h": "c"
+    "pthread.h": "c",
+    "processing_req.h": "c"
   }
 }
