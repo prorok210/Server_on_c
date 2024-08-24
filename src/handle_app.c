@@ -6,9 +6,9 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <errno.h>
-#include "processing_req.h"
-#include "server.h"
-#include "handle_app.h"
+#include "../include/processing_req.h"
+#include "../include/server.h"
+#include "../include/handle_app.h"
 
 // Функция для установки таймаута сокета
 void set_socket_timeout(int client_sock, int timeout_sec) {

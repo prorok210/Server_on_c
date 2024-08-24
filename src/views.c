@@ -1,4 +1,4 @@
-#include "processing_req.h"
+#include "../include/processing_req.h"
 #include <string.h>
 
 // прототип функции-обработчика struct HttpResponse view_func(struct HttpRequest *request);

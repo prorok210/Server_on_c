@@ -8,11 +8,11 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <pthread.h>
-#include "http_pars.h"
-#include "processing_req.h"
-#include "handle_app.h"
-#include "register_views.h"
-#include "server.h"
+#include "../include/http_pars.h"
+#include "../include/processing_req.h"
+#include "../include/handle_app.h"
+#include "../include/register_views.h"
+#include "../include/server.h"
 
 
 #define PORT 8080

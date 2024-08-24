@@ -5,7 +5,7 @@
       "name": "C/C++: gdb Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/main.exe", // Замените на имя вашего исполняемого файла
+      "program": "${workspaceFolder}/server.exe", // Замените на имя вашего исполняемого файла
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

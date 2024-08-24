@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "http_pars.h"   // Для структуры HttpRequest
+#include "../include/http_pars.h"   // Для структуры HttpRequest
 
 #define PORT 8080
 #define BUF_SIZE 16384

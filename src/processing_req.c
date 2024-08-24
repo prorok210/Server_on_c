@@ -3,10 +3,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
-#include "http_pars.h"
-#include "register_views.h"
-#include "processing_req.h"
-#include "handle_app.h"
+#include "../include/http_pars.h"
+#include "../include/register_views.h"
+#include "../include/processing_req.h"
+#include "../include/handle_app.h"
 
 
 int receive_msg(int client_sock, char* buffer, int buf_size, struct HttpRequest *request) {

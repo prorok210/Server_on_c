@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "http_pars.h"
-#include "register_views.h"
+#include "../include/http_pars.h"
+#include "../include/register_views.h"
 
 
 // Примеры запросов для тестирования

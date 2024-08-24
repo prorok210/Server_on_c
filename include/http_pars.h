@@ -2,7 +2,7 @@
 #define HTTP_PARS_H
 
 #include <sys/types.h>
-#include "processing_req.h"
+#include "../include/processing_req.h"
 
 #define HEADERS_COUNT 50
 
