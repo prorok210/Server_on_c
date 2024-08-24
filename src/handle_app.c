@@ -24,6 +24,7 @@ void set_socket_timeout(int client_sock, int timeout_sec) {
         perror("Error setting send timeout");
     }
 }
+
 // Приложение для обработки запросов, формирование и отправления ответов
 void* app(void* args) {
     struct Args* arg = (struct Args*) args;
@@ -42,8 +43,6 @@ void* app(void* args) {
             fprintf(stderr, "Too many requests\n");
             goto cleanup;
         }
-            
-        
 
         //Получение запроса
         int bytes_read = receive_msg(client_sock, buffer, buf_size, rec_request); 

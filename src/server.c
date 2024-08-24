@@ -19,14 +19,6 @@
 #define BUF_SIZE 16384
 #define BACKLOG 10
 
-// int socket(int domain, int type, int protocol); //(AF_INET, AF_INET6) Возвращает дискриптор сокета
-// int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
-// int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
-// int listen(int sockfd, int backlog); int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
-// int read(); int recv(); int recvfrom(); int recvmsg();
-// int write(); int send(); int sendto(); int sendmsg();
-// int close();shutdown(); 
-
 
 int start_server() {
     struct sockaddr_in server_sock_addr = {
