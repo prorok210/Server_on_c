@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "processing_req.h"
+#include "../include/processing_req.h"
 
 struct HttpResponse view_func(struct HttpRequest *request);
 
@@ -43,7 +43,7 @@ int register_view(char *route, struct HttpResponse (*view)(struct HttpRequest *r
     return 0;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "views.h"
+#include "../include/views.h"
 
 
 //функция для регистрации роутов. Они будут включены в основную программу

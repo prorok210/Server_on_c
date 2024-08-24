@@ -3,8 +3,8 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "http_pars.h"
-#include "processing_req.h"
+#include "../include/http_pars.h"
+#include "../include/processing_req.h"
 
 
 int parse_request(const char *request, struct HttpRequest *Req) {
@@ -26,7 +26,7 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         free(temp_ptr);
         return 1;
     }
-    if (strcpy(req_copy, request) < 0) {
+    if (strcpy(req_copy, request) != NULL) {
         fprintf(stderr, "Copy error in file %s at line %d\n", __FILE__, __LINE__);
         free(temp_ptr);
         free(req_copy);

@@ -5,6 +5,11 @@
     "setjmp.h": "c",
     "string.h": "c",
     "inet.h": "c",
-    "pthread.h": "c"
+    "pthread.h": "c",
+    "processing_req.h": "c",
+    "register_views.h": "c",
+    "handle_app.h": "c",
+    "server.h": "c",
+    "views.h": "c"
   }
 }

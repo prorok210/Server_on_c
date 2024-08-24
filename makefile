@@ -1,23 +1,46 @@
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR := $(dir $(MAKEFILE_PATH))
+
+# Компилятор
+CC = gcc
+
+# Флаги компиляции
+CFLAGS = -Wall -Wextra -I./include
+
+# Директории
+SRC_DIR := $(MAKEFILE_DIR)src
+BUILD_DIR := $(MAKEFILE_DIR)build
+INCLUDE_DIR := $(MAKEFILE_DIR)include
+
+# Исходные файлы
+SOURCES = $(wildcard $(SRC_DIR)/*.c)
+
+# Объектные файлы
+OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
+
 # Имя исполняемого файла
 TARGET = server
 
-# Файлы исходного кода для сервера
-SRC = server.c handle_app.c processing_req.c register_views.c views.c http_pars.c
+# Правило по умолчанию
+all: $(BUILD_DIR) $(TARGET)
 
-# Файлы объектных файлов
-OBJ = $(SRC:.c=.o)
+# Создание директории для объектных файлов
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-# Флаги компилятора
-CFLAGS = -Wall -g
+# Компиляция исполняемого файла
+$(TARGET): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $(OBJECTS)
 
-# Правило для сборки исполняемого файла
-$(TARGET): $(OBJ)
-	gcc $(CFLAGS) -o $(TARGET) $(OBJ)
+# Компиляция объектных файлов
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-# Правило для компиляции каждого .c файла в .o файл
-%.o: %.c
-	gcc $(CFLAGS) -c $< -o $@
-
-# Очистка объектных файлов и исполняемого файла
+# Очистка
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -rf $(BUILD_DIR) $(TARGET)
+
+# Пересборка
+rebuild: clean all
+
+.PHONY: all clean rebuild

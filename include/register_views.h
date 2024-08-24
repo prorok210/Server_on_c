@@ -1,7 +1,7 @@
 #ifndef REGISTER_VIEWS_H
 #define REGISTER_VIEWS_H
 
-#include "processing_req.h"
+#include "../include/processing_req.h"
 
 struct HttpResponse view_func(struct HttpRequest *request);
 
