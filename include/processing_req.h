@@ -3,6 +3,8 @@
 
 #include <sys/types.h>
 
+#define HEADERS_COUNT 50
+
 struct HttpResponse  {
     int status_code;
     char *status;
@@ -20,7 +22,7 @@ struct HttpRequest {
     char *method;
     char *url;
     char *version;
-    struct Headers headers[20];
+    struct Headers headers[HEADERS_COUNT];
     char *body;
 };
 
