@@ -42,8 +42,6 @@ void* app(void* args) {
             fprintf(stderr, "Too many requests\n");
             goto cleanup;
         }
-            
-        
 
         //Получение запроса
         int bytes_read = receive_msg(client_sock, buffer, buf_size, rec_request); 

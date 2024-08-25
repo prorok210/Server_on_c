@@ -26,12 +26,8 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         free(temp_ptr);
         return 1;
     }
-    if (strcpy(req_copy, request) != NULL) {
-        fprintf(stderr, "Copy error in file %s at line %d\n", __FILE__, __LINE__);
-        free(temp_ptr);
-        free(req_copy);
-        return 1;
-    }
+
+    strcpy(req_copy, request);
 
     if (req_copy == NULL || req_copy[0] == '\0' || req_copy[0] == '\n' || req_copy[0] == '\r' || req_copy[0] == ' ' || req_copy[0] == '\t' || (strstr(req_copy, "\r\n") == NULL)) {
         fprintf(stderr, "Request is empty in file %s at line %d\n", __FILE__, __LINE__);

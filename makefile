@@ -10,7 +10,7 @@ CC = gcc
 INCLUDE_PATHS = -I./include -I$(CONAN_INCLUDE_PATH) -mconsole
 
 # Флаги компиляции с добавлением всех путей к заголовочным файлам
-CFLAGS = -Wall -Wextra $(INCLUDE_PATHS)
+CFLAGS = -g -Wall -Wextra $(INCLUDE_PATHS)
 
 # Флаги для линковки
 LDFLAGS = $(shell grep '^CONAN_LDFLAGS=' conandeps.mk | cut -d '=' -f 2)
