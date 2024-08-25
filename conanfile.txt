@@ -1,0 +1,5 @@
+[requires]
+mongo-c-driver/1.27.5
+
+[generators]
+MakeDeps
