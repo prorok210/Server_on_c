@@ -156,7 +156,7 @@ int parse_request(const char *request, struct HttpRequest *Req) {
 
     *Req = *temp_ptr;
 
-    free(req_copy);
+    if (req_copy) free(req_copy);
     return 0;
 }
 
@@ -165,9 +165,9 @@ void free_request(struct HttpRequest *Req) {
     if (Req == NULL) return;
 
     // Освобождение динамически выделенной памяти для метода, URL и версии
-    free(Req->method);
-    free(Req->url);
-    free(Req->version);
+    if (Req->method) free(Req->method);
+    if (Req->url) free(Req->url);
+    if (Req->version) free(Req->version);
 
     // Освобождение динамически выделенной памяти для значений заголовков
     for (int i = 0; i < HEADERS_COUNT; i++) {
@@ -175,9 +175,9 @@ void free_request(struct HttpRequest *Req) {
             break;
         }
         free(Req->headers[i].name);
-        free(Req->headers[i].value);
+        if (Req->headers[i].value) free(Req->headers[i].value);
     }
 
     // Освобождение тела запроса
-    free(Req->body);
+    if (Req->body) free(Req->body);
 }

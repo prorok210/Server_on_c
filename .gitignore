@@ -1,5 +1,9 @@
-
+build
+bin
+CMakeFiles
 *.o
 *.exe
 *.bat
 *.mk
+CMakeCache.txt
+cmake_install.cmake

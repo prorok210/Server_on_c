@@ -10,6 +10,9 @@
     "register_views.h": "c",
     "handle_app.h": "c",
     "server.h": "c",
-    "views.h": "c"
-  }
+    "views.h": "c",
+    "mongoc.h": "c"
+  },
+  "makefile.makePath": "cmake -G Unix Makefiles",
+  "makefile.makefilePath": ""
 }
