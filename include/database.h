@@ -15,4 +15,6 @@ void disconnect_from_db(
     mongoc_database_t *database
 );
 
+int check_collections(mongoc_database_t *database);
+
 #endif //DATABASE_H

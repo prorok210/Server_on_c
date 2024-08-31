@@ -7,3 +7,4 @@ CMakeFiles
 *.mk
 CMakeCache.txt
 cmake_install.cmake
+Makefile

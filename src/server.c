@@ -26,7 +26,6 @@ int start_server() {
 
     mongoc_client_t *mongoc_client = NULL;
     mongoc_database_t *mongoc_database = NULL;
-    mongoc_cursor_t *cursor = NULL;
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
@@ -45,6 +44,11 @@ int start_server() {
         fprintf(stderr, "Connection to database error");
         return 1;
     } else printf("Successes connected to database\n");
+
+    if (check_collections(mongoc_database) != 0) {
+        fprintf(stderr, "Checking collections error");
+        return 1;
+    } else printf("Collections checked\n");
 
     if (paths()!=0){
         fprintf(stderr, "Loading views error");

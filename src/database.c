@@ -1,7 +1,9 @@
 #include <libmongoc-1.0/mongoc/mongoc.h>
+#include <bson/bson.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "../include/collections.h"
 
 
 int connect_to_db(const char* connection_details, const char* database_name, mongoc_client_t **client, mongoc_database_t **database) {
@@ -16,7 +18,7 @@ int connect_to_db(const char* connection_details, const char* database_name, mon
 
     char url[2048];
 
-    snprintf(url, sizeof(url), "mongodb+srv://%s@cluster0.bsas9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", connection_details);
+    snprintf(url, sizeof(url), "mongodb+srv://%s@cluster0.bsas9.mongodb.net/%s?retryWrites=true&w=majority&appName=Cluster0", connection_details, database_name);
 
     *client = mongoc_client_new(url);
         if (!*client) {
@@ -69,3 +71,56 @@ void disconnect_from_db(mongoc_client_t *client, mongoc_database_t *database) {
     mongoc_cleanup();
 }
 
+
+int check_collections(mongoc_database_t *database) {
+    bson_t opts = BSON_INITIALIZER;
+    const bson_t *doc;
+    mongoc_cursor_t *cursor;
+    bson_error_t error;
+
+    cursor = mongoc_database_find_collections_with_opts(database, &opts);
+
+    char* existing_collections[num_collections];
+    unsigned int num_existing_collections = 0;
+
+    while (mongoc_cursor_next(cursor, &doc)) {
+        bson_iter_t iter;
+        if (bson_iter_init_find(&iter, doc, "name")) {
+            const char *name = bson_iter_utf8(&iter, NULL);
+            existing_collections[num_existing_collections] = strdup(name);
+            num_existing_collections++;
+        }
+    }
+    
+    for (unsigned int i = 0; i < num_collections; i++) {
+        const char *collection_name = collections_names[i];
+        int exists = 0;
+
+        // Check if the collection exists
+        for (unsigned int j = 0; j < num_existing_collections; j++) {
+            if (strcmp(existing_collections[j], collection_name) == 0) {
+                exists = 1;
+                break;
+            }
+        }
+        
+        // If the collection doesn't exist, create it
+        if (!exists) {
+            if (!mongoc_database_create_collection(database, collection_name, NULL, &error)) {
+                fprintf(stderr, "Error creating collection %s: %s\n", collection_name, error.message);
+                return 1;
+            } else {
+                printf("Created collection: %s\n", collection_name);
+            }
+        } else {
+            printf("Collection already exists: %s\n", collection_name);
+        }
+    }
+
+    for (unsigned int i = 0; i < num_existing_collections; i++) {
+        free(existing_collections[i]);
+    }
+    mongoc_cursor_destroy(cursor);
+    bson_destroy(&opts);
+    return 0;
+}

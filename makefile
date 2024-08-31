@@ -129,26 +129,12 @@ server/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
 .PHONY : server/fast
 
-#=============================================================================
-# Target rules for targets named test
-
-# Build rule for target.
-test: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test
-.PHONY : test
-
-# fast build rule for target.
-test/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
-.PHONY : test/fast
-
 src/database.o: src/database.c.o
 .PHONY : src/database.o
 
 # target to build an object file
 src/database.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/database.c.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/database.c.o
 .PHONY : src/database.c.o
 
 src/database.i: src/database.c.i
@@ -157,7 +143,6 @@ src/database.i: src/database.c.i
 # target to preprocess a source file
 src/database.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/database.c.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/database.c.i
 .PHONY : src/database.c.i
 
 src/database.s: src/database.c.s
@@ -166,7 +151,6 @@ src/database.s: src/database.c.s
 # target to generate assembly for a file
 src/database.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/database.c.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/database.c.s
 .PHONY : src/database.c.s
 
 src/handle_app.o: src/handle_app.c.o
@@ -199,7 +183,6 @@ src/http_pars.o: src/http_pars.c.o
 # target to build an object file
 src/http_pars.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/http_pars.c.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/http_pars.c.o
 .PHONY : src/http_pars.c.o
 
 src/http_pars.i: src/http_pars.c.i
@@ -208,7 +191,6 @@ src/http_pars.i: src/http_pars.c.i
 # target to preprocess a source file
 src/http_pars.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/http_pars.c.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/http_pars.c.i
 .PHONY : src/http_pars.c.i
 
 src/http_pars.s: src/http_pars.c.s
@@ -217,7 +199,6 @@ src/http_pars.s: src/http_pars.c.s
 # target to generate assembly for a file
 src/http_pars.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/http_pars.c.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/http_pars.c.s
 .PHONY : src/http_pars.c.s
 
 src/processing_req.o: src/processing_req.c.o
@@ -250,7 +231,6 @@ src/register_views.o: src/register_views.c.o
 # target to build an object file
 src/register_views.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/register_views.c.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/register_views.c.o
 .PHONY : src/register_views.c.o
 
 src/register_views.i: src/register_views.c.i
@@ -259,7 +239,6 @@ src/register_views.i: src/register_views.c.i
 # target to preprocess a source file
 src/register_views.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/register_views.c.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/register_views.c.i
 .PHONY : src/register_views.c.i
 
 src/register_views.s: src/register_views.c.s
@@ -268,7 +247,6 @@ src/register_views.s: src/register_views.c.s
 # target to generate assembly for a file
 src/register_views.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/register_views.c.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/register_views.c.s
 .PHONY : src/register_views.c.s
 
 src/server.o: src/server.c.o
@@ -301,7 +279,6 @@ src/views.o: src/views.c.o
 # target to build an object file
 src/views.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/views.c.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/views.c.o
 .PHONY : src/views.c.o
 
 src/views.i: src/views.c.i
@@ -310,7 +287,6 @@ src/views.i: src/views.c.i
 # target to preprocess a source file
 src/views.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/views.c.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/views.c.i
 .PHONY : src/views.c.i
 
 src/views.s: src/views.c.s
@@ -319,32 +295,7 @@ src/views.s: src/views.c.s
 # target to generate assembly for a file
 src/views.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/views.c.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/src/views.c.s
 .PHONY : src/views.c.s
-
-tests/tests.o: tests/tests.c.o
-.PHONY : tests/tests.o
-
-# target to build an object file
-tests/tests.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/tests/tests.c.o
-.PHONY : tests/tests.c.o
-
-tests/tests.i: tests/tests.c.i
-.PHONY : tests/tests.i
-
-# target to preprocess a source file
-tests/tests.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/tests/tests.c.i
-.PHONY : tests/tests.c.i
-
-tests/tests.s: tests/tests.c.s
-.PHONY : tests/tests.s
-
-# target to generate assembly for a file
-tests/tests.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/tests/tests.c.s
-.PHONY : tests/tests.c.s
 
 # Help Target
 help:
@@ -355,7 +306,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... server"
-	@echo "... test"
 	@echo "... src/database.o"
 	@echo "... src/database.i"
 	@echo "... src/database.s"
@@ -377,9 +327,6 @@ help:
 	@echo "... src/views.o"
 	@echo "... src/views.i"
 	@echo "... src/views.s"
-	@echo "... tests/tests.o"
-	@echo "... tests/tests.i"
-	@echo "... tests/tests.s"
 .PHONY : help
 
 

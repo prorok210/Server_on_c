@@ -39,6 +39,24 @@ int parse_request(const char *request, struct HttpRequest *Req) {
     char* saveptr;
 
     char* end_of_headers = strstr(req_copy, "\r\n\r\n");
+    if (end_of_headers != NULL) {
+        end_of_headers += 4;
+    } else {
+        fprintf(stderr, "Invalid request in file %s at line %d\n", __FILE__, __LINE__);
+        free_request(temp_ptr);
+        free(req_copy);
+        return 1;
+    }
+
+    char* body = malloc(strlen(end_of_headers) + 1);
+    if (body == NULL) {
+        fprintf(stderr, "Memory allocation error in file %s at line %d\n", __FILE__, __LINE__);
+        free_request(temp_ptr);
+        free(req_copy);
+        return 1;
+    }
+    strcpy(body, end_of_headers);
+
   
     char* line = strtok_r(req_copy, "\r\n", &saveptr);
     if (line == NULL){
@@ -93,15 +111,6 @@ int parse_request(const char *request, struct HttpRequest *Req) {
 
     // заголовки запроса
     int header_count = 0;
-    
-    if (end_of_headers != NULL) {
-        end_of_headers += 4;
-    } else {
-        fprintf(stderr, "Invalid request in file %s at line %d\n", __FILE__, __LINE__);
-        free_request(temp_ptr);
-        free(req_copy);
-        return 1;
-    }
 
     while ((line = strtok_r(saveptr, "\r\n", &saveptr))!= NULL) {
         if ((line == end_of_headers) ||(line[0] == '\0'))
@@ -143,7 +152,6 @@ int parse_request(const char *request, struct HttpRequest *Req) {
     }
 
     //тело запроса
-    char *body = strtok(end_of_headers, "\r\n");
     if (body) {
         temp_ptr->body = strdup(body);
         if (temp_ptr->body == NULL) {
