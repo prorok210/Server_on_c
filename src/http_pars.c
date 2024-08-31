@@ -26,12 +26,8 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         free(temp_ptr);
         return 1;
     }
-    if (strcpy(req_copy, request) != NULL) {
-        fprintf(stderr, "Copy error in file %s at line %d\n", __FILE__, __LINE__);
-        free(temp_ptr);
-        free(req_copy);
-        return 1;
-    }
+
+    strcpy(req_copy, request);
 
     if (req_copy == NULL || req_copy[0] == '\0' || req_copy[0] == '\n' || req_copy[0] == '\r' || req_copy[0] == ' ' || req_copy[0] == '\t' || (strstr(req_copy, "\r\n") == NULL)) {
         fprintf(stderr, "Request is empty in file %s at line %d\n", __FILE__, __LINE__);
@@ -43,6 +39,24 @@ int parse_request(const char *request, struct HttpRequest *Req) {
     char* saveptr;
 
     char* end_of_headers = strstr(req_copy, "\r\n\r\n");
+    if (end_of_headers != NULL) {
+        end_of_headers += 4;
+    } else {
+        fprintf(stderr, "Invalid request in file %s at line %d\n", __FILE__, __LINE__);
+        free_request(temp_ptr);
+        free(req_copy);
+        return 1;
+    }
+
+    char* body = malloc(strlen(end_of_headers) + 1);
+    if (body == NULL) {
+        fprintf(stderr, "Memory allocation error in file %s at line %d\n", __FILE__, __LINE__);
+        free_request(temp_ptr);
+        free(req_copy);
+        return 1;
+    }
+    strcpy(body, end_of_headers);
+
   
     char* line = strtok_r(req_copy, "\r\n", &saveptr);
     if (line == NULL){
@@ -51,8 +65,7 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         free(temp_ptr);
         return 1;
     }
-    
-    // основная информация из запроса
+
     char *method = strtok(line, " ");
     if (method) {
         temp_ptr->method = strdup(method);
@@ -95,17 +108,7 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         return 1;
     }
 
-    // заголовки запроса
     int header_count = 0;
-    
-    if (end_of_headers != NULL) {
-        end_of_headers += 4;
-    } else {
-        fprintf(stderr, "Invalid request in file %s at line %d\n", __FILE__, __LINE__);
-        free_request(temp_ptr);
-        free(req_copy);
-        return 1;
-    }
 
     while ((line = strtok_r(saveptr, "\r\n", &saveptr))!= NULL) {
         if ((line == end_of_headers) ||(line[0] == '\0'))
@@ -146,8 +149,6 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         header_count++;
     }
 
-    //тело запроса
-    char *body = strtok(end_of_headers, "\r\n");
     if (body) {
         temp_ptr->body = strdup(body);
         if (temp_ptr->body == NULL) {
@@ -160,7 +161,7 @@ int parse_request(const char *request, struct HttpRequest *Req) {
 
     *Req = *temp_ptr;
 
-    free(req_copy);
+    if (req_copy) free(req_copy);
     return 0;
 }
 
@@ -168,20 +169,17 @@ int parse_request(const char *request, struct HttpRequest *Req) {
 void free_request(struct HttpRequest *Req) {
     if (Req == NULL) return;
 
-    // Освобождение динамически выделенной памяти для метода, URL и версии
-    free(Req->method);
-    free(Req->url);
-    free(Req->version);
+    if (Req->method) free(Req->method);
+    if (Req->url) free(Req->url);
+    if (Req->version) free(Req->version);
 
-    // Освобождение динамически выделенной памяти для значений заголовков
     for (int i = 0; i < HEADERS_COUNT; i++) {
         if (Req->headers[i].name == NULL) {
             break;
         }
         free(Req->headers[i].name);
-        free(Req->headers[i].value);
+        if (Req->headers[i].value) free(Req->headers[i].value);
     }
 
-    // Освобождение тела запроса
-    free(Req->body);
+    if (Req->body) free(Req->body);
 }

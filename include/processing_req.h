@@ -2,7 +2,11 @@
 #define PROCESSING_REQ_H
 
 #include <sys/types.h>
+#include <libmongoc-1.0/mongoc/mongoc.h>
 
+#define HEADERS_COUNT 50
+
+// Структуры для работы с HTTP-объектами
 struct HttpResponse  {
     int status_code;
     char *status;
@@ -20,7 +24,7 @@ struct HttpRequest {
     char *method;
     char *url;
     char *version;
-    struct Headers headers[20];
+    struct Headers headers[HEADERS_COUNT];
     char *body;
 };
 
@@ -30,6 +34,6 @@ int send_msg(int client_sock, struct HttpResponse* response);
 
 void format_request(char* request);
 
-struct HttpResponse (*router(char* route))(struct HttpRequest *);
+struct HttpResponse (*router(char* route))(struct HttpRequest *, mongoc_database_t *);
 
 #endif // PROCESSING_REQ_H

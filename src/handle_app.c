@@ -6,11 +6,12 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <errno.h>
+#include <mongoc.h>
 #include "../include/processing_req.h"
 #include "../include/server.h"
 #include "../include/handle_app.h"
 
-// Функция для установки таймаута сокета
+
 void set_socket_timeout(int client_sock, int timeout_sec) {
     struct timeval timeout;
     timeout.tv_sec  = timeout_sec;
@@ -25,18 +26,19 @@ void set_socket_timeout(int client_sock, int timeout_sec) {
     }
 }
 
-// Приложение для обработки запросов, формирование и отправления ответов
+
 void* app(void* args) {
     struct Args* arg = (struct Args*) args;
 
-    int client_sock                 = arg->client_sock;
-    int buf_size                    = arg->buf_size;
-    char* buffer                    = arg->buffer;
-    int keep_alive                  = arg->keep_alive;
-    int timeout_s                   = arg->timeout_s;
-    int max_requests                = arg->max_requests;
-    int num_of_requests             = arg->num_of_requests;
-    struct HttpRequest* rec_request = arg->rec_request;
+    int client_sock                        = arg->client_sock;
+    int buf_size                           = arg->buf_size;
+    char* buffer                           = arg->buffer;
+    int keep_alive                         = arg->keep_alive;
+    int timeout_s                          = arg->timeout_s;
+    int max_requests                       = arg->max_requests;
+    int num_of_requests                    = arg->num_of_requests;
+    mongoc_database_t* mongoc_database     = arg->db_database;
+    struct HttpRequest* rec_request        = arg->rec_request;
 
     while(keep_alive) {
         if (num_of_requests > max_requests){
@@ -44,7 +46,6 @@ void* app(void* args) {
             goto cleanup;
         }
 
-        //Получение запроса
         int bytes_read = receive_msg(client_sock, buffer, buf_size, rec_request); 
         if (bytes_read < 0) {
             fprintf(stderr, "Error receiving message\n");
@@ -57,7 +58,6 @@ void* app(void* args) {
 
         keep_alive = 0;
         
-        //получение данных из заголовков
         for (int i = 0; i < HEADERS_COUNT; i++) {
             if (rec_request->headers[i].name == NULL) {
                 break;
@@ -94,7 +94,7 @@ void* app(void* args) {
 
         set_socket_timeout(client_sock, timeout_s);
 
-        struct HttpResponse (*view_function)(struct HttpRequest *);
+        struct HttpResponse (*view_function)(struct HttpRequest *, mongoc_database_t *);
 
         view_function = router(rec_request->url);
         if (view_function == NULL) {
@@ -103,7 +103,7 @@ void* app(void* args) {
             goto cleanup;
         }
 
-        struct HttpResponse response = view_function(rec_request);
+        struct HttpResponse response = view_function(rec_request, mongoc_database);
 
         if (send_msg(client_sock, &response) < 0) {
             if (errno == EWOULDBLOCK || errno == EAGAIN) {

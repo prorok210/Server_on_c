@@ -67,7 +67,7 @@ void format_request(char* request) {
 }
 
 
-struct HttpResponse (*router(char* route))(struct HttpRequest *) {
+struct HttpResponse (*router(char* route))(struct HttpRequest *, mongoc_database_t *) {
     struct Views *current = header_view;
     while (current != NULL) {
         if (strcmp(current->route, route) == 0) {

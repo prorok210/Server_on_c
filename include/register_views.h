@@ -2,18 +2,21 @@
 #define REGISTER_VIEWS_H
 
 #include "../include/processing_req.h"
+#include <libmongoc-1.0/mongoc/mongoc.h>
 
-struct HttpResponse view_func(struct HttpRequest *request);
+//Прототип функции-обработчика запроса
+struct HttpResponse view_func(struct HttpRequest *request, mongoc_database_t *database);
 
+//Структура для хранения роутов и указателей на функции-обработчики
 struct Views {
     char *route;
-    struct HttpResponse (*view)(struct HttpRequest *request);
+    struct HttpResponse (*view)(struct HttpRequest *request, mongoc_database_t *database);
     struct Views *next;
 };
 
 extern struct Views *header_view;
 
-int register_view(char *route, struct HttpResponse (*view)(struct HttpRequest *request));
+int register_view(char *route, struct HttpResponse (*view)(struct HttpRequest *request, mongoc_database_t *database));
 
 int paths();
 

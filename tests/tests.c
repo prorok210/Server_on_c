@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../include/http_pars.h"
 #include "../include/register_views.h"
+#include "../include/database.h"
 
 
 // Примеры запросов для тестирования
@@ -82,9 +83,7 @@ int parser_test() {
     } else {
             success_case3 = 0;
             printf("Case 3 failed\n");
-        }
-        free_request(case3);
-
+        };
 
     printf("Case 4\n");
 
@@ -156,11 +155,24 @@ int register_test() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
+//тестирование подключение к базе данных
+int db_test(){
+    printf("DB test\n");
+    const char* connection_details = "testDB:testDB"; // "<user>:<password>"
+    const char* database_name = "testDB";
+    mongoc_client_t *client; 
+    mongoc_database_t *database;
+    if (connect_to_db(connection_details, database_name, &client, &database) != 0) {
+        return 1;
+    }
+    mongoc_database_destroy(database);
+    mongoc_client_destroy(client);
+    mongoc_cleanup();
+    return 0;
+}
 
 
 int main() {
@@ -175,5 +187,12 @@ int main() {
     } else {
         printf("Some register views tests failed\n");
     }
+
+    if (db_test() == 0) {
+        printf("DB test passed\n");
+    } else {
+        printf("DB test failed\n");
+    }
+
     return 0;
 }
