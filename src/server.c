@@ -30,34 +30,34 @@ int start_server() {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         fprintf(stderr, "Socket init error");
-        return 1;
+        return -1;
     }
     printf("Socket created\n");
 
     if (bind(sock, (struct sockaddr *)&server_sock_addr, addrlen) != 0) {
         fprintf(stderr, "Bind error");
-        return 1;
+        return -1;
     }
     printf("Socket bound\n");
 
     if (connect_to_db("testDB:testDB", "testDB", &mongoc_client, &mongoc_database) != 0) {
         fprintf(stderr, "Connection to database error");
-        return 1;
+        return -1;
     } else printf("Successes connected to database\n");
 
     if (check_collections(mongoc_database) != 0) {
         fprintf(stderr, "Checking collections error");
-        return 1;
+        return -1;
     } else printf("Collections checked\n");
 
     if (paths()!=0){
         fprintf(stderr, "Loading views error");
-        return 1;
+        return -1;
     }
 
     if (listen(sock, BACKLOG) < 0) {
             fprintf(stderr, "Listen error");
-            return 1;
+            return -1;
         }
 
     printf("Server was successfully started\n");

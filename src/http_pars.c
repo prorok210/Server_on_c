@@ -65,8 +65,7 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         free(temp_ptr);
         return 1;
     }
-    
-    // основная информация из запроса
+
     char *method = strtok(line, " ");
     if (method) {
         temp_ptr->method = strdup(method);
@@ -109,7 +108,6 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         return 1;
     }
 
-    // заголовки запроса
     int header_count = 0;
 
     while ((line = strtok_r(saveptr, "\r\n", &saveptr))!= NULL) {
@@ -151,7 +149,6 @@ int parse_request(const char *request, struct HttpRequest *Req) {
         header_count++;
     }
 
-    //тело запроса
     if (body) {
         temp_ptr->body = strdup(body);
         if (temp_ptr->body == NULL) {
@@ -172,12 +169,10 @@ int parse_request(const char *request, struct HttpRequest *Req) {
 void free_request(struct HttpRequest *Req) {
     if (Req == NULL) return;
 
-    // Освобождение динамически выделенной памяти для метода, URL и версии
     if (Req->method) free(Req->method);
     if (Req->url) free(Req->url);
     if (Req->version) free(Req->version);
 
-    // Освобождение динамически выделенной памяти для значений заголовков
     for (int i = 0; i < HEADERS_COUNT; i++) {
         if (Req->headers[i].name == NULL) {
             break;
@@ -186,6 +181,5 @@ void free_request(struct HttpRequest *Req) {
         if (Req->headers[i].value) free(Req->headers[i].value);
     }
 
-    // Освобождение тела запроса
     if (Req->body) free(Req->body);
 }

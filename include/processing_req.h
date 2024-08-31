@@ -6,6 +6,7 @@
 
 #define HEADERS_COUNT 50
 
+// Структуры для работы с HTTP-объектами
 struct HttpResponse  {
     int status_code;
     char *status;

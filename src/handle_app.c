@@ -11,7 +11,7 @@
 #include "../include/server.h"
 #include "../include/handle_app.h"
 
-// Функция для установки таймаута сокета
+
 void set_socket_timeout(int client_sock, int timeout_sec) {
     struct timeval timeout;
     timeout.tv_sec  = timeout_sec;
@@ -26,7 +26,7 @@ void set_socket_timeout(int client_sock, int timeout_sec) {
     }
 }
 
-// Приложение для обработки запросов, формирование и отправления ответов
+
 void* app(void* args) {
     struct Args* arg = (struct Args*) args;
 
@@ -46,7 +46,6 @@ void* app(void* args) {
             goto cleanup;
         }
 
-        //Получение запроса
         int bytes_read = receive_msg(client_sock, buffer, buf_size, rec_request); 
         if (bytes_read < 0) {
             fprintf(stderr, "Error receiving message\n");
@@ -59,7 +58,6 @@ void* app(void* args) {
 
         keep_alive = 0;
         
-        //получение данных из заголовков
         for (int i = 0; i < HEADERS_COUNT; i++) {
             if (rec_request->headers[i].name == NULL) {
                 break;

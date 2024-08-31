@@ -6,6 +6,7 @@
 #define MAX_TIMEOUT 100
 #define MAX_REQUESTS 100
 
+// Приложение для обработки запросов
 void* app(void* args);
 
 #endif  // HANDLE_APP_H

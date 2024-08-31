@@ -6,32 +6,32 @@
 #include <stdlib.h>
 #include <cjson/cJSON.h>
 
-
-const struct HttpResponse bad_request = { // Bad Request
+// Bad Request
+const struct HttpResponse bad_request = { 
     .status_code = 400,
     .status = "Bad Request",
     .content_type = "text/html",
     .content = "<html><body><h1>Bad Request</h1></body></html>",
     .content_length = strlen("<html><body><h1>Bad Request</h1></body></html>")
 };
-
-const struct HttpResponse not_found = { // Not Found
+// Not Found
+const struct HttpResponse not_found = { 
     .status_code = 404,
     .status = "Not Found",
     .content_type = "text/html",
     .content = "<html><body><h1>Not Found</h1></body></html>",
     .content_length = strlen("<html><body><h1>Not Found</h1></body></html>")
 };
-
-const struct HttpResponse method_not_allowed = { // Method Not Allowed
+// Method Not Allowed
+const struct HttpResponse method_not_allowed = { 
     .status_code = 405,
     .status = "Method Not Allowed",
     .content_type = "text/html",
     .content = "<html><body><h1>Method Not Allowed</h1></body></html>",
     .content_length = strlen("<html><body><h1>Method Not Allowed</h1></body></html>")
 };
-
-const struct HttpResponse internal_server_error = { // Internal Server Error
+// Internal Server Error
+const struct HttpResponse internal_server_error = {
     .status_code = 500,
     .status = "Internal Server Error",
     .content_type = "text/html",
@@ -39,8 +39,7 @@ const struct HttpResponse internal_server_error = { // Internal Server Error
     .content_length = strlen("<html><body><h1>Internal Server Error</h1></body></html>")
 };
 
-// прототип функции-обработчика struct HttpResponse view_func(struct HttpRequest *request);
-
+// прототип функции-обработчика struct HttpResponse view_func(struct HttpRequest *request, mongoc_database_t *database);
 
 
 struct HttpResponse test_func(struct HttpRequest *request, mongoc_database_t *database) {

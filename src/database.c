@@ -96,15 +96,13 @@ int check_collections(mongoc_database_t *database) {
         const char *collection_name = collections_names[i];
         int exists = 0;
 
-        // Check if the collection exists
         for (unsigned int j = 0; j < num_existing_collections; j++) {
             if (strcmp(existing_collections[j], collection_name) == 0) {
                 exists = 1;
                 break;
             }
         }
-        
-        // If the collection doesn't exist, create it
+
         if (!exists) {
             if (!mongoc_database_create_collection(database, collection_name, NULL, &error)) {
                 fprintf(stderr, "Error creating collection %s: %s\n", collection_name, error.message);

@@ -1,7 +1,7 @@
 #ifndef COLLECTIONS_H
 #define COLLECTIONS_H
 
-
+// Определение структур для коллекций
 struct Users {
     char col_name[255];
     char name[255];

@@ -1,12 +1,12 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "../include/http_pars.h"   // Для структуры HttpRequest
-#include <mongoc/mongoc.h>          // Для работы с MongoDB
+#include "../include/http_pars.h"
+#include <mongoc/mongoc.h>
 
-#define PORT 8080
-#define BUF_SIZE 16384
-#define BACKLOG 10
+#define PORT 8080 // Порт на котором запускается сервер
+#define BUF_SIZE 16384 // Макс размер запросов и ответов
+#define BACKLOG 10 // Максимальное количество подключений в очереди
 
 // Структура для передачи аргументов в поток
 struct Args {
@@ -17,8 +17,8 @@ struct Args {
     int timeout_s;                       // Время таймаута
     int max_requests;                    // Максимальное количество запросов
     int num_of_requests;                 // Счетчик запросов
-    mongoc_client_t *db_client;      // Клиент MongoDB(другой бд)
-    mongoc_database_t *db_database;  // Струтура для бд
+    mongoc_client_t *db_client;          // Клиент MongoDB(другой бд)
+    mongoc_database_t *db_database;      // Струтура для бд
     struct HttpRequest *rec_request;     // Структура для обработки запроса
 };
 
